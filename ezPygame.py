@@ -1,4 +1,7 @@
-import pygame
+try:
+	import pygamee
+except ModuleNotFoundError:
+	raise ModuleNotFoundError("Could not locate pygame")
 
 # All the variables, ezPygame needs
 CLOCK = None
