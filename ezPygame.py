@@ -1,21 +1,22 @@
 try:
-	import pygamee
+	import pygame
 except ModuleNotFoundError:
 	raise ModuleNotFoundError("Could not locate pygame")
 
-# All the variables, ezPygame needs
+# All the variables, ezPygame needs.
 CLOCK = None
 SCREEN = None
 FRAMERATE = None
-RUNNING = None
-EVENTS = None
+RUNNING = False
+EVENTS = []
 BGCOLOR = None
 DRAWFUNC = None
-ITERATIONFUNC = None
+ITERATIONFUNC = __stdItFunc__
 
 
-# This function initializes ezPygame
 def init(windowSize, bgColor = (0, 0, 0), framerate = 60):
+	"""Initialize ezPygame"""
+
 	global SCREEN
 	global CLOCK
 	global FRAMERATE
@@ -31,11 +32,11 @@ def init(windowSize, bgColor = (0, 0, 0), framerate = 60):
 	RUNNING = True
 	EVENTS = []
 	BGCOLOR = bgColor
-	ITERATIONFUNC = standartIterationFunction
+	ITERATIONFUNC = __stdItFunc__
 
 
-# This function updates the whole system and clears the screen
 def update():
+	"""Do task, that need to be performed on every frame."""
 	global EVENTS
 	global RUNNING
 
@@ -45,39 +46,56 @@ def update():
 			RUNNING = False
 	SCREEN.fill(BGCOLOR)
 
-# This function calls the draw function specified by the user and does the pygame stuff neded to draw to the screen
+
 def draw():
+	"""Call the draw function specified and update the screen."""
 	if DRAWFUNC != None:
 		DRAWFUNC()
 	pygame.display.flip()
 	CLOCK.tick(FRAMERATE)
 
-# This function just returns the screen. Nothing more. Might remove, since it seems kinda unnecessary
+
 def getScreen():
+	"""
+	Return the screen's surface.
+	Nothing more.
+	I might remove this function, since it seems kinda unnecessary, because 'ezPygame.SCREEN' is alot easier.
+	"""
 	return SCREEN
 
-# This function sets the draw function to the passed function
+
 def setDraw(function):
+	"""
+	Set the draw function to the passed function.
+	The draw function passed will be called every frame, and is intendet to house all the drawing code.
+	It can also be used to do other stuff, that has to be done on every frame, like handling inputs.
+	"""
 	global DRAWFUNC
 
 	DRAWFUNC = function
 
-# !! This function is only intendet to be used by ezPygame !!
-# The standart function, that is executed on each frame
-def standartIterationFunction():
+
+def __stdItFunc__():
+	"""
+	!!  This function is only intendet to be used inside of ezPygame  !!
+	It's the standart function that gets called every frame, that calls update and draw.
+	If you want to change this function, you can set ezPygame.ITERATIONFUNC to a function, that you have declared yourself.
+	"""
 	update()
 	draw()
 
-# This function will run a loop of the iteration function, until the window is stopped
+
 def run():
+	"""Runs the infinite loop, that calls the iteration function on every frame."""
 	global RUNNING
 
 	RUNNING = True
 	while RUNNING:
 		ITERATIONFUNC()
 
-# This function stops the above described loop
+
 def stop():
+	"""Stops the infinite loop."""
 	global RUNNING
 
 	RUNNING = False
